@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+<title>Code Panel</title>
+<meta charset="utf-8">
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jqueryui.min.js"></script>
+<style>
+* {
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light",
+					  "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	margin:0;
+	padding:0;
+}
+body, html{
+	height: 100%;
+	width: 100%;
+}
+#wrapper {
+	height: 100%;
+	margin:0;
+}
+#menuBar {
+	height: 40px;
+	width:100%;
+	border-bottom: 1px solid grey;
+	background-color: #EAAAC5;
+	padding: 0;
+	margin:0;
+}
+#logo {
+	padding: 10px 0 0 20px;
+	font-weight: bold;
+	font-size: 120%;
+	float:left;
+}
+#buttonDiv {
+	float: right;
+	padding: 10px 10px 0 0;
+}
+#runBtn {
+	font-size: 100%;
+}
+#toggles {
+	margin: 0 auto;
+	width: 262px;
+	list-style: none;
+	border: 1px solid grey;
+	border-radius: 3px;
+	height:27px;
+	padding: 0;
+	position: relative;
+	top: 5px;
+}
+#toggles li {
+	float: left;
+	border-right: 1px solid grey;
+	padding: 5px 8px;
+}
+.selected {
+	background-color: #C0C0C0;
+}
+.clear {
+	clear: both;
+}
+.codeContain {
+	width: 48%;
+	height:50%;
+	float: left;
+	border:1px solid grey;
+	position: relative;
+	margin-left:10px;
+	border-bottom:1px solid grey;
+}
+.codeContain textarea {
+	width:98%;
+	height: 96%;
+	border:none;
+ 	resize: none;
+ 	left: 20px;
+ 	font-family:monotype;
+ 	font-size:100%;
+ 	box-sizing:bordor-box;
+ 	padding:6px;
+}
+#JavascriptContain, #CSSContain{
+	border-bottom:1px solid grey;
+	display: none;
+}
+.label {
+	position: absolute;
+	right:10px;
+	top:10px;
+}
+
+
+iframe {
+	height:100%;
+	width: 100%;
+	border: 0;
+	margin-left: 0;
+	margin-top: 40px;
+	float:left;
+}
+</style>
+</head>
+<body>
+	
+	<div id="wrapper">
+		<div id="menuBar">
+			<div id="logo"> 
+				Code Panel 
+			</div>
+			<div id="buttonDiv">
+				<button id="runBtn">Run</button>
+			</div>
+			
+				<ul id="toggles">
+					<li class="toggles selected" >HTML</li>
+					<li class="toggles">CSS</li>
+					<li class="toggles">Javascript</li>
+					<li style="border:none" class="toggles selected">Result</li>
+				</ul>
+			
+		</div>
+		<div class="clear"></div>
+		<div class="codeContain" id="HTMLContain">
+			<div class="label">HTML</div>
+			<textarea id="htmlCode"></textarea>
+		</div>
+		<div class="codeContain" id="CSSContain">
+			<div class="label">CSS</div>
+			<textarea id="cssCode">html {background-color:blue;}</textarea>
+		</div>
+		<div class="codeContain" id="JavascriptContain">
+			<div class="label">Javascript</div>
+			<textarea id="jsCode"></textarea>
+		</div>
+		
+<!-- 		id prefix is the same with li contents. -->
+		<div class="codeContain" id="ResultContain">
+			<div class="label">Result</div>
+			<iframe id="resultFrame"></iframe>
+		</div>
+	</div>
+	<script type="text/javascript">
+         var windowHeight=$(window).height();
+         var menuBarHeight=$("#menuBar").height();
+         var codeContainHeight=windowHeight-menuBarHeight;
+         
+         $("codeContain").height(codeContainHeight + "px");
+         
+         $(".toggles").click(function() {
+         	$(this).toggleClass("selected");
+         	var activeTag=$(this).html();
+         	$("#"+activeTag+"Contain").toggle();
+         	var showDiv=$(".codeContainer").filter(function() {
+         		return($(this).css("display") != "none");
+         	}).length;
+         	var width=100/showDiv;
+         	$(".codeContain").width(width+"%");
+         });
+         
+         $("#runBtn").click(function() {
+         	$("iframe").contents().find("html").html("<style>"+$("#cssCode").val()+"</style>"+$("#htmlCode").val());
+
+//          	This line below is dangerous. Don't use it!!!
+         	document.getElementById("resultFrame").contentWindow.eval($("#jsCode").val());
+         });
+	</script>
+	
+</body>
+</html>
